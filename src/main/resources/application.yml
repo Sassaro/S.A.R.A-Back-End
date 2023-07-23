@@ -1,0 +1,27 @@
+spring:
+  #   base de datos postgreSQL
+  datasource:
+    url: jdbc:postgresql://0.0.0.0:5432/db_saa
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    #Esto debe estar siempre en false
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+
+# base documental
+  data:
+    mongodb:
+      uri: mongodb://admin:admin@127.0.0.1:27019/sara?authSource=admin
+
+# Para activar el Trace
+logging:
+  level:
+    root: INFO

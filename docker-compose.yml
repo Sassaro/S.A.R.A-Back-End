@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: db_saa
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./Docker/init_db.sh:/docker-entrypoint-initdb.d/01_init_db.sh
+
+  #Base de datos en PostgreSQL
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container_saa
+    restart: always
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@unsam.edu.ar
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+  #Base de datos en mongo
+  mongo:
+    # tomamos la última imagen de mongo
+    image: mongo:latest
+    container_name: mongo_sara
+    hostname: host-mongo
+
+    # mapeo el puerto de mi computadora 27019 contra el 27017 (importante porque es el default de mongo)
+    ports:
+      - "27019:27017"
+    volumes:
+      - ~/apps/mongo_sara:/data/db
+      - ~/apps/mongo_sara:/var/log/mongodb/
+      - ./Docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: sara
+
+
+volumes:
+  db:
+  pgadmin-data:
